@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
-import { ServiceCard } from "@/components/service-card";
+import { ArcanaCard } from "@/components/arcana-card";
 import { Button } from "@/components/ui/button";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
@@ -17,7 +17,7 @@ export default function ServicesPage() {
       <section className="bg-night py-16 md:py-24">
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (<ServiceCard key={service.slug} service={service} />))}
+            {services.map((service, i) => (<ArcanaCard key={service.slug} service={service} index={i} />))}
           </ul>
           <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl border border-gold/30 p-8 md:flex-row md:items-center">
             <div>

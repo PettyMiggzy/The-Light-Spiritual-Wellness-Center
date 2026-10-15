@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
+import { CursorLight } from "@/components/cursor-light";
+import { Splash } from "@/components/splash";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { address, hours, site } from "@/lib/site";
@@ -41,14 +43,19 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${cormorant.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${cormorant.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: '(function(){try{var d=document.documentElement;var f=/[?&]splash/.test(location.search);if(location.pathname==="/"&&(f||!sessionStorage.getItem("light-splash"))&&!matchMedia("(prefers-reduced-motion: reduce)").matches){d.dataset.splash="pending"}}catch(e){}})()' }} />
+      </head>
       <body className="min-h-screen antialiased">
+        <Splash />
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-gold focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>
         <CartProvider>
           <SiteHeader />
           <main id="content">{children}</main>
           <SiteFooter />
           <CartDrawer />
+          <CursorLight />
         </CartProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>

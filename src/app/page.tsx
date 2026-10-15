@@ -3,6 +3,11 @@ import Link from "next/link";
 import { ArrowRight, Gift, MapPin } from "lucide-react";
 import { EventRow } from "@/components/event-row";
 import { Motes } from "@/components/motes";
+import { Starfield } from "@/components/starfield";
+import { CardPull } from "@/components/card-pull";
+import { EnergyQuiz } from "@/components/energy-quiz";
+import { MoonPhase } from "@/components/moon-phase";
+import { ArcanaCard } from "@/components/arcana-card";
 import { OpenStatus } from "@/components/open-status";
 import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
@@ -30,7 +35,7 @@ export default function HomePage() {
           <Image src="/images/art/hero.jpg" alt="" fill priority sizes="100vw" className="object-cover object-[60%_55%]" />
         </div>
         <div className="absolute inset-0 -z-10 bg-night/45 md:bg-night/30" />
-        <Motes />
+        <Starfield />
         <div className="relative mx-auto w-full max-w-[1280px] px-5 pt-28 pb-20 sm:px-8">
           <p className="rise text-xs font-semibold tracking-[0.3em] text-gold uppercase">South Boston, Virginia</p>
           <h1 className="rise mt-5 max-w-4xl text-[3.4rem] leading-[0.95] text-balance sm:text-8xl lg:text-[8.5rem]" style={{ animationDelay: "0.1s" }}>
@@ -67,11 +72,32 @@ export default function HomePage() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">Energy work, sound, light, and touch, offered in a quiet room on Main Street.</p>
           </Reveal>
           <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((service) => (<ServiceCard key={service.slug} service={service} />))}
+            {featured.map((service, i) => (<ArcanaCard key={service.slug} service={service} index={i} />))}
           </ul>
           <div className="mt-10">
             <Link href="/services" className="inline-flex items-center gap-2 text-sm font-semibold text-gold hover:underline">See every session <ArrowRight className="size-4" aria-hidden="true" /></Link>
           </div>
+        </div>
+      </section>
+
+      {/* Card pull + moon */}
+      <section className="relative isolate overflow-hidden bg-[#070b22] py-24 md:py-36">
+        <Starfield />
+        <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8">
+          <Reveal className="mb-14"><MoonPhase /></Reveal>
+          <Reveal><CardPull /></Reveal>
+        </div>
+      </section>
+
+      {/* Quiz */}
+      <section className="bg-night py-24 md:py-36">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+          <Reveal className="mx-auto mb-12 max-w-2xl text-center">
+            <p className="text-xs font-semibold tracking-[0.28em] text-gold uppercase">Find your energy</p>
+            <h2 className="mt-4 text-5xl leading-[1.02] text-balance sm:text-7xl">What does your spirit need today?</h2>
+            <p className="mt-5 text-lg text-muted-foreground">Three quick questions. We will point you to the session that fits.</p>
+          </Reveal>
+          <Reveal><EnergyQuiz /></Reveal>
         </div>
       </section>
 

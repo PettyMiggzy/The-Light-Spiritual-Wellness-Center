@@ -97,3 +97,12 @@ h1, h2, h3 { font-family: var(--font-heading), Georgia, serif; font-weight: 500;
   html { scroll-behavior: auto; }
   .marquee { overflow-x: auto; }
 }
+
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+#splash { display: none; }
+html[data-splash="pending"] #splash { display: block; }
+html[data-splash="pending"] body { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) { #splash { display: none !important; } html[data-splash="pending"] body { overflow: auto; } }
