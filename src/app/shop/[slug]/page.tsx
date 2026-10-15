@@ -4,18 +4,21 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/add-to-cart";
 import { ProductCard } from "@/components/product-card";
-import { getProduct, money, products, shippingNote } from "@/lib/products";
+import { getProduct, getProducts } from "@/lib/data";
+import { money, shippingNote } from "@/lib/products";
 import { site } from "@/lib/site";
 
 type Params = { slug: string };
 
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return (await getProducts()).map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) return {};
   return {
     title: product.name,
@@ -26,9 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function ProductPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
-  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
+  const related = (await getProducts()).filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",

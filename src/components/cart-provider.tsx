@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { getProduct, maxQty, type Product } from "@/lib/products";
+import { useCatalog } from "@/components/catalog-provider";
+import { maxQty, type Product } from "@/lib/products";
 
 const KEY = "light-cart-v1";
 export type CartLine = { product: Product; qty: number };
@@ -21,6 +22,7 @@ type CartState = {
 const Ctx = createContext<CartState | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { get: getProduct } = useCatalog();
   const [items, setItems] = useState<Record<string, number>>({});
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,7 +35,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const clean: Record<string, number> = {};
         for (const [slug, qty] of Object.entries(parsed)) {
           const product = getProduct(slug);
-          if (product && Number.isInteger(qty) && qty > 0) clean[slug] = Math.min(qty, product.unique ? 1 : maxQty);
+          if (product && !product.sold && Number.isInteger(qty) && qty > 0) clean[slug] = Math.min(qty, product.unique ? 1 : maxQty);
         }
         setItems(clean);
       }
@@ -52,13 +54,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, ready]);
 
-  const limit = (slug: string) => (getProduct(slug)?.unique ? 1 : maxQty);
+  const limit = useCallback((slug: string) => (getProduct(slug)?.unique ? 1 : maxQty), [getProduct]);
 
   const add = useCallback((slug: string, qty = 1) => {
-    if (!getProduct(slug)) return;
+    const p = getProduct(slug);
+    if (!p || p.sold) return;
     setItems((cur) => ({ ...cur, [slug]: Math.min((cur[slug] ?? 0) + qty, limit(slug)) }));
     setOpen(true);
-  }, []);
+  }, [getProduct, limit]);
   const setQty = useCallback((slug: string, qty: number) => {
     setItems((cur) => {
       const next = { ...cur };
@@ -66,7 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       else next[slug] = Math.min(qty, limit(slug));
       return next;
     });
-  }, []);
+  }, [limit]);
   const remove = useCallback((slug: string) => setQty(slug, 0), [setQty]);
   const clear = useCallback(() => setItems({}), []);
 
@@ -86,7 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove,
       clear,
     };
-  }, [items, open, add, setQty, remove, clear]);
+  }, [items, open, add, setQty, remove, clear, getProduct]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

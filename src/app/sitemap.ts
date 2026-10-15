@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/data";
 import { services } from "@/lib/services";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const products = await getProducts();
   const base = "https://www.thelightspiritualwellness.com";
   const pages = ["", "/shop", "/services", "/events", "/gift-cards", "/visit"].map((p) => ({ url: `${base}${p}` }));
   return [

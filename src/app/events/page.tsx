@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
 import { EventRow } from "@/components/event-row";
 import { PageHero } from "@/components/page-hero";
-import { upcomingEvents } from "@/lib/events";
+import { upcomingEventsList } from "@/lib/data";
 import { site } from "@/lib/site";
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Events",
   description: "Yoga, qigong, sound, breathwork, and book signings at The Light Spiritual Wellness Center, 435 Main Street, South Boston, Virginia.",
 };
 
-export default function EventsPage() {
-  const events = upcomingEvents();
+export default async function EventsPage() {
+  const events = await upcomingEventsList();
   return (
     <>
       <PageHero eyebrow="Gather" title="Events with The Light." lede="Movement, breath, and sound in good company. Tickets and RSVPs run through our events page." art="/images/art/corporate.jpg" />

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { CatalogProvider } from "@/components/catalog-provider";
+import { getProducts, getSettings } from "@/lib/data";
 import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
+import { PublicChrome } from "@/components/public-chrome";
 import { CursorLight } from "@/components/cursor-light";
 import { Splash } from "@/components/splash";
 import { SiteFooter } from "@/components/site-footer";
@@ -41,22 +44,25 @@ const jsonLd = {
   areaServed: address,
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const [products, settings] = await Promise.all([getProducts(), getSettings()]);
   return (
     <html lang="en" className={`${manrope.variable} ${cormorant.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: '(function(){try{var d=document.documentElement;var f=/[?&]splash/.test(location.search);if(location.pathname==="/"&&(f||!sessionStorage.getItem("light-splash"))&&!matchMedia("(prefers-reduced-motion: reduce)").matches){d.dataset.splash="pending"}}catch(e){}})()' }} />
       </head>
       <body className="min-h-screen antialiased">
-        <Splash />
+        <PublicChrome><Splash /></PublicChrome>
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-gold focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>
+        <CatalogProvider products={products}>
         <CartProvider>
-          <SiteHeader />
+          <PublicChrome><SiteHeader announcement={settings.announcement} /></PublicChrome>
           <main id="content">{children}</main>
-          <SiteFooter />
-          <CartDrawer />
-          <CursorLight />
+          <PublicChrome><SiteFooter /></PublicChrome>
+          <PublicChrome><CartDrawer /></PublicChrome>
+          <PublicChrome><CursorLight /></PublicChrome>
         </CartProvider>
+        </CatalogProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>
     </html>

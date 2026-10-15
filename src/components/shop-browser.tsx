@@ -3,12 +3,16 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
-import { categories, products, type Category } from "@/lib/products";
+import { useCatalog } from "@/components/catalog-provider";
+import { categoriesFor } from "@/lib/categories";
+import type { Category } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 type Sort = "featured" | "low" | "high" | "name";
 
 export function ShopBrowser() {
+  const { products } = useCatalog();
+  const categories = useMemo(() => categoriesFor(products), [products]);
   const [category, setCategory] = useState<Category | "All">("All");
   const [sort, setSort] = useState<Sort>("featured");
   const [query, setQuery] = useState("");
@@ -20,7 +24,7 @@ export function ShopBrowser() {
     if (sort === "high") return [...list].sort((a, b) => b.price - a.price);
     if (sort === "name") return [...list].sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [category, sort, query]);
+  }, [products, category, sort, query]);
 
   return (
     <div>

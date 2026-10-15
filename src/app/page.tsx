@@ -14,19 +14,17 @@ import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
 import { ServiceCard } from "@/components/service-card";
 import { Button } from "@/components/ui/button";
-import { upcomingEvents } from "@/lib/events";
-import { products } from "@/lib/products";
+import { getProducts, upcomingEventsList } from "@/lib/data";
 import { featuredServiceSlugs, getService } from "@/lib/services";
 import { address, hoursSummary, site } from "@/lib/site";
 
-export const revalidate = 3600;
-
 const marquee = ["Clusters", "Spheres", "Raw Pieces", "Carvings", "Palm-Stones", "Rare Pieces", "Jewelry", "Crystal Kits", "Reiki", "Sound Bed", "Aura Photography", "Crystal Light Therapy", "Tarot"];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getProducts();
   const featured = featuredServiceSlugs.map((slug) => getService(slug)!);
-  const shelf = [...products].sort((a, b) => Number(!!b.badge) - Number(!!a.badge)).filter((p) => p.images.length > 0).slice(0, 8);
-  const events = upcomingEvents().slice(0, 4);
+  const shelf = [...products].filter((p) => p.images.length > 0 && !p.sold).sort((a, b) => Number(!!b.badge) - Number(!!a.badge)).slice(0, 8);
+  const events = (await upcomingEventsList()).slice(0, 4);
 
   return (
     <>

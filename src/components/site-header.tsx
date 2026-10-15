@@ -11,7 +11,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 import { nav, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+export function SiteHeader({ announcement }: { announcement?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   useEffect(() => {
@@ -23,6 +23,7 @@ export function SiteHeader() {
 
   return (
     <header className={cn("fixed inset-x-0 top-0 z-40 transition-colors duration-300", scrolled ? "border-b border-white/10 bg-night" : "bg-transparent")}>
+      {announcement ? <p className="bg-gold px-4 py-2 text-center text-sm font-medium text-ink">{announcement}</p> : null}
       <div className="mx-auto flex h-[4.5rem] max-w-[1280px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link href="/" className="group flex items-center gap-3" aria-label={site.name}>
           <Sunburst className="size-10 text-gold transition-transform duration-700 group-hover:rotate-45" />

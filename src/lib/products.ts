@@ -9,8 +9,10 @@ export type Product = {
   category: Category;
   images: string[];
   badge?: "New" | "Pre-order";
+  description?: string;
   /** One-of-one specimens can only be bought once. */
   unique: boolean;
+  sold?: boolean;
 };
 
 const img = (name: string) => `/images/products/${name}.jpg`;
@@ -40,26 +42,10 @@ const curated: Product[] = [
   { slug: "apophyllite-stilbite", name: "Apophyllite + Stilbite", price: 68, category: "Clusters", images: [img("apophyllite-stillbite")], unique: true },
 ];
 
-const preferredOrder = ["Clusters", "Spheres", "Raw Pieces", "Carvings", "Palm-Stones", "Towers & Points", "Rare & Statement Pieces", "Home & Display", "Jewelry", "Gift Boxes & Crystal Kits", "Gifts & Books"];
-
-// `npm run import:products` writes the full catalog here. When it has items they replace the curated seed above.
-import imported from "./products.imported.json";
-export const products: Product[] = (imported as Product[]).length > 0 ? (imported as Product[]) : curated;
-
-export const categories: Array<Category | "All"> = [
-  "All",
-  ...[...new Set(products.map((p) => p.category))].sort((a, b) => {
-    const ia = preferredOrder.indexOf(a);
-    const ib = preferredOrder.indexOf(b);
-    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
-  }),
-];
+export const seedProducts: Product[] = curated;
 
 export const maxQty = 9;
 
-export function getProduct(slug: string) {
-  return products.find((product) => product.slug === slug);
-}
 
 export function money(amount: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(amount);

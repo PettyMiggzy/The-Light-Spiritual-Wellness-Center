@@ -14,7 +14,7 @@ npm run build
 
 ## What is real and what is a placeholder
 
-- **Shop:** 18 real products with their photos and prices. `npm run import:products -- ./wix-products.csv` loads the full catalog from a Wix Stores export and downloads the photos.
+- **Shop and admin:** products, photos, events and the site banner live in a Neon database and are managed at `/admin` (see below). Until something is saved there the site shows a built-in starter set of 18 products.
 - **Cart and checkout:** a real cart that prepares an order note to email, text or copy. It does **not** take payment. Adding Square or Stripe is the next step.
 - **Booking:** every session links to the shop's existing Square appointment page.
 - **Events and gift cards:** tickets, RSVPs and gift cards still go through the existing Wix pages (`site.ticketsUrl`, `site.giftCardUrl` in `src/lib/site.ts`).
@@ -27,3 +27,11 @@ Sessions are described as complementary wellness experiences, not medical treatm
 ## Email list
 
 The signup forms post to `NEXT_PUBLIC_SIGNUP_URL` when it is set (copy `.env.example` to `.env.local`, or add it in Vercel). When it is empty they open an email to the shop so no sign-up is lost.
+
+## Admin (`/admin`)
+
+The owner signs in at `/admin`. From there she can add and edit products (photos are resized in the browser before upload), mark pieces sold or hide them, add and edit events, set a banner message for the top of the site, and import the whole catalog from a Wix export (Wix > Store Products > More Actions > Export, then upload the CSV, then press "Copy photos to this site").
+
+Environment variables (set in Vercel, see `.env.example`): `DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SECRET`. The password is never stored in the code. The first time anything is saved, the starter catalog and events are copied into the database so the shop never shrinks to a single item.
+
+Tables: `products`, `images` (resized photos), `events`, `settings`.
