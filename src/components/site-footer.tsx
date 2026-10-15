@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Signup } from "@/components/signup";
 import { address, hoursSummary, nav, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -34,6 +35,12 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2 text-sm">
             {nav.map((item) => (<li key={item.href}><Link className="hover:text-gold" href={item.href}>{item.label}</Link></li>))}
           </ul>
+        </div>
+      </div>
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between">
+          <p className="font-heading text-2xl">Get the card of the week.</p>
+          <Signup id="footer-signup" />
         </div>
       </div>
       <div className="border-t border-white/10">

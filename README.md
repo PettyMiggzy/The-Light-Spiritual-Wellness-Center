@@ -23,3 +23,7 @@ npm run build
 - **Zip code** `24592` for South Boston should be confirmed.
 
 Sessions are described as complementary wellness experiences, not medical treatment.
+
+## Email list
+
+The signup forms post to `NEXT_PUBLIC_SIGNUP_URL` when it is set (copy `.env.example` to `.env.local`, or add it in Vercel). When it is empty they open an email to the shop so no sign-up is lost.

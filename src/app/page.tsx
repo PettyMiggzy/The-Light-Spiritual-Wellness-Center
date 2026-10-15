@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Gift, MapPin } from "lucide-react";
 import { EventRow } from "@/components/event-row";
 import { Motes } from "@/components/motes";
+import { Signup } from "@/components/signup";
 import { Starfield } from "@/components/starfield";
 import { CardPull } from "@/components/card-pull";
 import { EnergyQuiz } from "@/components/energy-quiz";
@@ -132,6 +133,19 @@ export default function HomePage() {
               <Button className="h-14 rounded-full px-8 text-base" render={<a href={site.bookingUrl} target="_blank" rel="noreferrer" />}>Book the Ultimate Session</Button>
               <Button variant="outline" className="h-14 rounded-full border-white/50 bg-transparent px-8 text-base text-ivory hover:bg-white/10 hover:text-ivory" render={<Link href="/services/ultimate-session" />}>What it includes</Button>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* List */}
+      <section className="relative isolate overflow-hidden bg-night py-24 md:py-32">
+        <Starfield />
+        <div className="relative mx-auto max-w-[1280px] px-5 text-center sm:px-8">
+          <Reveal className="mx-auto max-w-3xl">
+            <p className="text-xs font-semibold tracking-[0.28em] text-gold uppercase">Join the circle</p>
+            <h2 className="mt-4 text-5xl leading-[1.02] text-balance sm:text-7xl">First dibs on new crystals.</h2>
+            <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">One-of-a-kind pieces go fast. Get new arrivals, event invites, and a card of the week sent to you before anyone else.</p>
+            <div className="mt-9 flex justify-center"><Signup id="home-signup" /></div>
           </Reveal>
         </div>
       </section>
